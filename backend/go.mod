@@ -1,4 +1,4 @@
-module github.com/adnanmaja/metadata-extract.git
+module github.com/adnanmaja/metadata-extract
 
 go 1.25.0
 

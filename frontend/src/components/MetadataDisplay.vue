@@ -1,14 +1,70 @@
 <script setup>
-defineProps(['title', 'rows']) 
+import { computed } from 'vue'
+
+const props = defineProps({
+  title: {
+    type: String,
+    required: true
+  },
+  metadata: {
+    type: Object,
+    required: true
+  },
+  category: {
+    type: String,
+    required: true,
+    validator: (value) => ['basic', 'camera', 'location'].includes(value)
+  }
+})
+
+const categoryMappings = {
+  basic: [
+    { key: 'FileName', label: 'File Name' },
+    { key: 'FileSize', label: 'File Size' },
+    { key: 'FileType', label: 'File Type' },
+    { key: 'DateTimeOriginal', label: 'Date Taken' },
+    { key: 'ImageWidth', label: 'Width' },
+    { key: 'ImageHeight', label: 'Height' }
+  ],
+  camera: [
+    { key: 'Make', label: 'Camera Make' },
+    { key: 'Model', label: 'Camera Model' },
+    { key: 'LensInfo', label: 'Lens' },
+    { key: 'FNumber', label: 'Aperture' },
+    { key: 'ExposureTime', label: 'Shutter Speed' },
+    { key: 'ISO', label: 'ISO' },
+    { key: 'FocalLength', label: 'Focal Length' }
+  ],
+  location: [
+    { key: 'GPSLatitude', label: 'Latitude' },
+    { key: 'GPSLongitude', label: 'Longitude' },
+    { key: 'GPSAltitude', label: 'Altitude' },
+    { key: 'City', label: 'City' },
+    { key: 'Country', label: 'Country' }
+  ]
+}
+
+const filteredMetadata = computed(() => {
+  const mappings = categoryMappings[props.category]
+  return mappings
+    .map(({ key, label }) => ({
+      label,
+      value: props.metadata[key] || 'Not available'
+    }))
+    .filter(item => item.value !== undefined)
+})
 </script>
 
 <template>
     <div class="result-section">
         <div class="section-label">{{ title }}</div>
-        <div class="result-rows">
-        <div v-for="n in rows" :key="n" class="result-row skeleton">
-            <span></span><span></span>
-        </div>
+        <div 
+        v-for="(item, index) in filteredMetadata" 
+        :key="index"
+        class="result-rows"
+      >
+        <span class="metadata-label">{{ item.label }}:</span>
+        <span class="metadata-value">{{ item.value }}</span>
         </div>
     </div>
 </template>
@@ -33,12 +89,6 @@ defineProps(['title', 'rows'])
 
 .result-rows {
   display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-
-.result-row {
-  display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0;
@@ -47,18 +97,11 @@ defineProps(['title', 'rows'])
   font-size: 0.85rem;
 }
 
-.result-row:last-child {
+.result-rows:last-child {
   border-bottom: none;
 }
 
-.result-row.skeleton span {
-  display: block;
-  height: 12px;
-  border-radius: 4px;
-  background: #1e1e1e;
-}
-
-.result-row.skeleton span:first-child { width: 30%; }
-.result-row.skeleton span:last-child { width: 45%; }
+.result-rows span:first-child { width: 30%; }
+.result-rows span:last-child { width: 45%; }
 
 </style>

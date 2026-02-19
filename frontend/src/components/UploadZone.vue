@@ -3,6 +3,12 @@ import { ref } from 'vue'
 const emit = defineEmits(['file-dropped'])
 const isDragging = ref(false)
 
+const handleFileSelect = (e) => {
+  const files = e.target.files
+  if (files.length) {
+    emit('file-dropped', files[0])
+  }
+}
 const handleDragOver = (e) => { e.preventDefault(); isDragging.value = true }
 const handleDragLeave = () => { isDragging.value = false }
 const handleDrop = (e) => {
@@ -30,7 +36,7 @@ const handleDrop = (e) => {
           </svg>
         </div>
         <p class="upload-main">Drop your image here</p>
-        <p class="upload-sub">or <label class="browse-link">browse files<input type="file" accept="image/*" hidden /></label></p>
+        <p class="upload-sub">or <label class="browse-link">browse files<input type="file" accept="image/*" hidden @change="handleFileSelect" /></label></p>
         <div class="upload-formats">JPG · RAW · TIFF · WEBP · HEIC</div>
       </div>
     </div>

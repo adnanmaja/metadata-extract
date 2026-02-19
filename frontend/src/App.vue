@@ -2,23 +2,39 @@
 import TheHeader from './components/TheHeader.vue'
 import UploadZone from './components/UploadZone.vue'
 import MetadataDisplay from './components/MetadataDisplay.vue'
+import { useFileProcessor } from './composables/useFileProcessor'
 
-function processFile(file) {
-  console.log("Got the file:", file.name)
-  // Parsing logic stuff
-}
+const { processFile, isLoading, error, metadata } = useFileProcessor()
 </script>
 
 <template>
   <div class="page">
     <TheHeader />
 
-    <UploadZone @file-dropped="processFile" />
+    <UploadZone 
+    @file-dropped="processFile"
+    :loading="isLoading" />
 
-    <div class="results-placeholder">
-      <MetadataDisplay title="Basic Info" :rows="3" />
-      <MetadataDisplay title="Camera Data" :rows="4" />
-      <MetadataDisplay title="Location" :rows="2" />
+    <div v-if="error" class="error-message">
+      {{ error }}
+    </div>
+
+    <div class="results-placeholder" v-if="metadata">
+      <MetadataDisplay 
+        title="Basic Info" 
+        :metadata="metadata.basic" 
+        category="basic" 
+      />
+      <MetadataDisplay 
+        title="Camera Data" 
+        :metadata="metadata.camera" 
+        category="camera" 
+      />
+      <MetadataDisplay 
+        title="Location" 
+        :metadata="metadata.location" 
+        category="location" 
+      />
     </div>
 
     <footer class="footer">type shi</footer>

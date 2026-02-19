@@ -1,0 +1,34 @@
+# Git
+.git
+.gitignore
+
+# Go binaries and cache
+bin/
+obj/
+*.exe
+*.test
+*.out
+
+# Exclude the heavy stuff
+target/
+bin/
+vendor/
+
+# Frontend noise
+node_modules/
+dist/
+build/
+.next/
+frontend/
+
+# Environment and Secrets
+.env
+*.pem
+*.key
+
+Dockerfile
+.dockerignore
+
+# OS junk
+.DS_Store
+Thumbs.db

@@ -17,7 +17,7 @@ func main() {
 		AllowCredentials: true,
 	}))
 
-	router.POST("/upload", api.Upload)
+	router.POST("api/upload", api.Upload)
 	router.Run(":8080")
 
 }

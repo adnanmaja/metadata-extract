@@ -20,11 +20,12 @@ const props = defineProps({
 const categoryMappings = {
   basic: [
     { key: 'FileName', label: 'File Name' },
-    { key: 'FileSize', label: 'File Size' },
+    { key: 'FileSize', label: 'File Size (MiB)' },
     { key: 'FileType', label: 'File Type' },
     { key: 'DateTimeOriginal', label: 'Date Taken' },
-    { key: 'ImageWidth', label: 'Width' },
-    { key: 'ImageHeight', label: 'Height' }
+    { key: 'ImageWidth', label: 'Width (px)' },
+    { key: 'ImageHeight', label: 'Height (px)' },
+    { key: 'Software', label: 'Software Used'}
   ],
   camera: [
     { key: 'Make', label: 'Camera Make' },
@@ -33,7 +34,9 @@ const categoryMappings = {
     { key: 'FNumber', label: 'Aperture' },
     { key: 'ExposureTime', label: 'Shutter Speed' },
     { key: 'ISO', label: 'ISO' },
-    { key: 'FocalLength', label: 'Focal Length' }
+    { key: 'FocalLength', label: 'Focal Length' },
+    { key: 'CameraSerial', label: 'Camera Serial Number'},
+    { key: 'LensSerial', label: 'Lens Serial Number'}
   ],
   location: [
     { key: 'GPSLatitude', label: 'Latitude' },

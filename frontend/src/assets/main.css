@@ -1,0 +1,14 @@
+html, body {
+  height: 100%;  
+  margin: 0;
+  padding: 0;
+}
+
+#app {
+    color: bisque;
+}
+
+
+body {
+    background: linear-gradient(135deg, #0B1A0B 0%, #5D3F6A 100%);
+}

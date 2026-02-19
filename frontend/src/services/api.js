@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://metadata-extractor.livelymoss-c733e49a.southeastasia.azurecontainerapps.io/api' 
+const API_BASE_URL = import.meta.env.VITE_API_URL
 
 export async function uploadFile(file) {
   const formData = new FormData()

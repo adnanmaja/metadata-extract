@@ -1,6 +1,8 @@
 # sample imgs
 images/
 
+.env
+
 # Logs
 logs
 *.log

@@ -2,6 +2,7 @@
 import TheHeader from './components/TheHeader.vue'
 import UploadZone from './components/UploadZone.vue'
 import MetadataDisplay from './components/MetadataDisplay.vue'
+import TheFooter from './components/TheFooter.vue'
 import { useFileProcessor } from './composables/useFileProcessor'
 
 const { processFile, isLoading, error, metadata } = useFileProcessor()
@@ -37,7 +38,7 @@ const { processFile, isLoading, error, metadata } = useFileProcessor()
       />
     </div>
 
-    <footer class="footer">type shi</footer>
+    <TheFooter />
   </div>
 </template>
 

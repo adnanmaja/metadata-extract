@@ -100,7 +100,7 @@ const handleDrop = (e) => {
 }
 
 .upload-formats {
-  margin-top: 0.6rem;
+  margin-top: 1rem;
   font-family: 'DM Mono', monospace;
   font-size: 0.7rem;
   letter-spacing: 0.1em;

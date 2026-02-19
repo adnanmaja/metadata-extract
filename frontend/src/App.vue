@@ -1,6 +1,7 @@
 <script setup>
 import TheHeader from './components/TheHeader.vue'
 import UploadZone from './components/UploadZone.vue'
+import SkeletonLoader from './components/SkeletonLoader.vue'
 import MetadataDisplay from './components/MetadataDisplay.vue'
 import TheFooter from './components/TheFooter.vue'
 import { useFileProcessor } from './composables/useFileProcessor'
@@ -18,6 +19,10 @@ const { processFile, isLoading, error, metadata } = useFileProcessor()
 
     <div v-if="error" class="error-message">
       {{ error }}
+    </div>
+
+    <div class="results-placeholder" v-if="isLoading">
+      <SkeletonLoader />
     </div>
 
     <div class="results-placeholder" v-if="metadata">

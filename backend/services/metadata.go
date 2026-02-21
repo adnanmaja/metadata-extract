@@ -6,7 +6,6 @@ import (
 	_ "image/jpeg"
 	_ "image/png"
 	"io"
-	"mime/multipart"
 	"os"
 	"time"
 
@@ -24,23 +23,25 @@ func extractMetadata(f io.ReadSeeker) (exif2.Exif, error) {
 	return e, nil
 }
 
-func FileHandler(fileHeader multipart.FileHeader) (exif2.Exif, map[string]interface{}, image.Config, error) {
+func FileHandler(src io.ReadSeeker) (
+	exif2.Exif,
+	map[string]interface{},
+	image.Config,
+	error,
+) {
 	totalStart := time.Now()
-
-	src, err := fileHeader.Open()
-	if err != nil {
-		return exif2.Exif{}, nil, image.Config{}, fmt.Errorf("Fileheader failed: %w", err)
-	}
-	defer src.Close()
 
 	copyStart := time.Now()
 	tempFile, err := os.CreateTemp("", "upload-*.tmp")
 	if err != nil {
-		return exif2.Exif{}, nil, image.Config{}, fmt.Errorf("Fileheader failed: %w", err)
+		return exif2.Exif{}, nil, image.Config{}, err
 	}
 	defer os.Remove(tempFile.Name())
 	defer tempFile.Close()
-	io.Copy(tempFile, src)
+
+	if _, err := io.Copy(tempFile, src); err != nil {
+		return exif2.Exif{}, nil, image.Config{}, err
+	}
 	fmt.Fprintf(gin.DefaultWriter, "[TIMER] File copy: %v\n", time.Since(copyStart))
 
 	exifStart := time.Now()

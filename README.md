@@ -148,3 +148,19 @@ HTTP/1.1 400 Bad Request
 ```
 
 These examples reflect how `backend/api/post.go` currently shapes responses; field availability depends on the uploaded image's EXIF data.
+
+
+note to myself: curl syntax:
+
+```
+curl -X PUT ^
+  -H "x-ms-blob-type: BlockBlob" ^
+  -H "Content-Type: image/jpeg" ^
+  --data-binary "@Image2.jpg" ^
+  "https://uploadss.blob.core.windows.net/upload/936150af-3d9a-46ed-b672-d6ece4b6709f.jpg?se=2026-02-21T18%3A10%3A16Z&sig=5MvkG4NoP1WFNBj0sxGUCad4pITGKlqYORLiz9cMP3I%3D&sp=cw&spr=https&sr=b&st=2026-02-21T17%3A50%3A16Z&sv=2026-02-06"
+
+curl -v -X POST "http://127.0.0.1:8080/api/upload" -H "Content-Type: application/json" -d "{\"blobUrl\": \"https://uploadss.blob.core.windows.net/upload/936150af-3d9a-46ed-b672-d6ece4b6709f.jpg\", \"originalName\": \"Image2.jpg\"}"
+
+
+"https://uploadss.blob.core.windows.net/upload/936150af-3d9a-46ed-b672-d6ece4b6709f.jpg?se=2026-02-21T18%3A10%3A16Z&sig=5MvkG4NoP1WFNBj0sxGUCad4pITGKlqYORLiz9cMP3I%3D&sp=cw&spr=https&sr=b&st=2026-02-21T17%3A50%3A16Z&sv=2026-02-06"
+```

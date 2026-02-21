@@ -76,6 +76,7 @@ func main() {
 	}))
 
 	router.Use(rateLimiterMiddleware())
+	router.POST("api/upload-url", api.GetUploadURL)
 	router.POST("api/upload", api.Upload)
 	router.Run(":8080")
 

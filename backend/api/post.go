@@ -1,24 +1,56 @@
 package api
 
 import (
+	"bytes"
+	"io"
 	"net/http"
 
 	metadata "github.com/adnanmaja/metadata-extract/services"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func Upload(c *gin.Context) {
-	fileHeader, err := c.FormFile("file")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "something"})
+	var req struct {
+		BlobURL      string `json:"blobUrl"`
+		OriginalName string `json:"originalName"`
+	}
+
+	if err := c.BindJSON(&req); err != nil || req.BlobURL == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "missing blobUrl"})
 		return
 	}
-	exif, metadata, config, _ := metadata.FileHandler(*fileHeader)
+
+	resp, err := http.Get(req.BlobURL)
+	if err != nil {
+		c.JSON(500, gin.H{"error": "failed to fetch blob"})
+		return
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		c.JSON(500, gin.H{"error": "blob fetch failed"})
+		return
+	}
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		c.JSON(500, gin.H{"error": "failed to read blob"})
+		return
+	}
+
+	reader := bytes.NewReader(data)
+
+	exif, metadata, config, err := metadata.FileHandler(reader)
+	if err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
 
 	c.JSON(200, gin.H{
 		"basic": gin.H{
-			"FileName":         fileHeader.Filename,
-			"FileSize":         float64(fileHeader.Size) / 1048576.0,
+			"FileName":         req.OriginalName,
+			"FileSize":         float64(len(data)) / 1048576.0,
 			"FileType":         exif.ImageType,
 			"DateTimeOriginal": exif.DateTimeOriginal(),
 			"ImageWidth":       config.Width,
@@ -43,5 +75,20 @@ func Upload(c *gin.Context) {
 			"City":         nil,
 			"Country":      nil,
 		},
+	})
+}
+
+func GetUploadURL(c *gin.Context) {
+	blobName := uuid.New().String() + ".jpg"
+
+	uploadURL, blobURL, err := metadata.GenerateUploadURL(blobName)
+	if err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"uploadUrl": uploadURL,
+		"blobUrl":   blobURL,
 	})
 }

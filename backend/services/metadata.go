@@ -8,6 +8,7 @@ import (
 	"io"
 	"mime/multipart"
 	"os"
+	"time"
 
 	"github.com/dsoprea/go-exif/v3"
 	"github.com/evanoberholster/imagemeta"
@@ -24,31 +25,44 @@ func extractMetadata(f io.ReadSeeker) (exif2.Exif, error) {
 }
 
 func FileHandler(fileHeader multipart.FileHeader) (exif2.Exif, map[string]interface{}, image.Config, error) {
+	totalStart := time.Now()
+
 	src, err := fileHeader.Open()
 	if err != nil {
 		return exif2.Exif{}, nil, image.Config{}, fmt.Errorf("Fileheader failed: %w", err)
 	}
 	defer src.Close()
 
+	copyStart := time.Now()
 	tempFile, err := os.CreateTemp("", "upload-*.tmp")
 	if err != nil {
 		return exif2.Exif{}, nil, image.Config{}, fmt.Errorf("Fileheader failed: %w", err)
 	}
 	defer os.Remove(tempFile.Name())
 	defer tempFile.Close()
-
 	io.Copy(tempFile, src)
-	tempFile.Seek(0, io.SeekStart)
+	fmt.Fprintf(gin.DefaultWriter, "[TIMER] File copy: %v\n", time.Since(copyStart))
 
-	exif, _ := extractMetadata(tempFile)
+	exifStart := time.Now()
 	tempFile.Seek(0, io.SeekStart)
-	additionalMetadata, _ := extractMetadataWithGoExif(tempFile)
+	exif, _ := extractMetadata(tempFile)
+	fmt.Fprintf(gin.DefaultWriter, "[TIMER] Imagemeta exif: %v\n", time.Since(exifStart))
+
+	goExifStart := time.Now()
+	tempFile.Seek(0, io.SeekStart)
+	additionalMetadata, _ := extractMetadataGoExif(tempFile)
+	fmt.Fprintf(gin.DefaultWriter, "[TIMER] Go Exif: %v\n", time.Since(goExifStart))
+
+	osStart := time.Now()
 	tempFile.Seek(0, io.SeekStart)
 	config, _ := extractMetadataOs(tempFile)
+	fmt.Fprintf(gin.DefaultWriter, "[TIMER] Image.Config (OS): %v\n", time.Since(osStart))
+
+	fmt.Fprintf(gin.DefaultWriter, "[TIMER] Total FileHandler: %v\n", time.Since(totalStart))
 	return exif, additionalMetadata, config, nil
 }
 
-func extractMetadataWithGoExif(f io.ReadSeeker) (map[string]interface{}, error) {
+func extractMetadataGoExif(f io.ReadSeeker) (map[string]interface{}, error) {
 	data, err := io.ReadAll(f)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read file: %w", err)

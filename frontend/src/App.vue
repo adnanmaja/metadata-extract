@@ -76,10 +76,4 @@ const { processFile, isLoading, error, metadata } = useFileProcessor()
   gap: 1.3rem;
 }
 
-.footer {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.75rem;
-  color: #333;
-  letter-spacing: 0.08em;
-}
 </style>

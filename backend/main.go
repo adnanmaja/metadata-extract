@@ -62,13 +62,14 @@ func rateLimiterMiddleware() gin.HandlerFunc {
 }
 
 func main() {
+	gin.SetMode(gin.ReleaseMode)
 	go cleanupClients()
 
 	router := gin.Default()
 
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		AllowOrigins:     []string{"*"}, // diatur di azure, cuma accept request dari adnanmaja.github.io
+		AllowMethods:     []string{"GET", "POST"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
@@ -77,4 +78,5 @@ func main() {
 	router.Use(rateLimiterMiddleware())
 	router.POST("api/upload", api.Upload)
 	router.Run(":8080")
+
 }

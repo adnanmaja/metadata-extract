@@ -41,12 +41,12 @@ Backend berjalan sebagai container di Azure Container Apps. Gunakan connection s
 
 **Contoh base URL untuk API:**
 ```
-https://https://metadata-extractor.livelymoss-c733e49a.southeastasia.azurecontainerapps.io/api/upload
+https://metadata-extractor.livelymoss-c733e49a.southeastasia.azurecontainerapps.io/api/upload
 ```
 
 ### GitHub Pages (Frontend)
 
-Frontend dikonfigurasi untuk mengirimkan permintaan ke URL backend di atas. Pastikan variabel lingkungan atau konfigurasi Vite diarahkan ke URL Container App yang benar sebelum melakukan build dan deploy ke GitHub Pages.
+Static single page web app menggunka Vue.js, di-deploy menggunakan GitHub Actions
 
 ---
 

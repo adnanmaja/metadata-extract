@@ -10,7 +10,7 @@ import (
 func Upload(c *gin.Context) {
 	fileHeader, err := c.FormFile("file")
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "something"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 		return
 	}
 	exif, metadata, config, _ := metadata.FileHandler(*fileHeader)

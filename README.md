@@ -41,7 +41,6 @@ Backend berjalan sebagai container di Azure Container Apps. Gunakan connection s
 
 **Contoh base URL untuk API:**
 ```
-https://metadata-extractor.livelymoss-c733e49a.southeastasia.azurecontainerapps.io/api/upload
 ```
 
 ### GitHub Pages (Frontend)
